@@ -8,7 +8,7 @@ app.get('/', (request, response) => {
     response.send("<h1>hello</h1>")
 })
 
-persons = [
+personsData = [
     { 
       "id": 1,
       "name": "Arto Hellas", 
@@ -33,12 +33,12 @@ persons = [
 
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    response.json(personsData)
 })
 
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    const person = persons.find(p => p.id === id)
+    const person = personsData.find(p => p.id === id)
 
     if (person) {
         response.json(person)
@@ -49,9 +49,30 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    persons = persons.map(p => p.id !== id)
+    persons = personsData.map(p => p.id !== id)
 
     response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+
+    if (!body) {
+        return response.status(400).json({
+            "error": "content missing"
+        })
+    }
+
+    const person = {
+        id: Math.floor(Math.random() * 103193139010311),
+        name: body.name,
+        number: body.number
+    }
+    console.log(person)
+
+    personsData = personsData.concat(person)
+
+    response.json(person)
 })
 
 app.get('/info', (request, response) => {
