@@ -5,3 +5,38 @@ Content-Type: application/json
     "name": "halyson",
     "number": "123344"
 }
+
+###
+POST http://localhost:3001/api/persons 
+Content-Type: application/json
+
+{
+    "name": "lll"
+}
+
+
+###
+POST http://localhost:3001/api/persons 
+Content-Type: application/json
+
+{
+    "number": "13991"
+}
+
+###
+POST http://localhost:3001/api/persons 
+Content-Type: application/json
+
+{
+    "name": "halyson",
+    "number": "123344"
+}
+
+###
+POST http://localhost:3001/api/persons 
+Content-Type: application/json
+
+{
+    "name": "dasfa",
+    "number": "123134"
+}

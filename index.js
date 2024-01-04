@@ -63,12 +63,25 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
+    if (!body.name || !body.number) {
+        return response.status(400).json({
+            "error": "missing name or number"
+        })
+    }
+
+    const found = personsData.find(p => p.name === body.name) ? true : false
+    
+    if (found) {
+        return response.status(409).json({
+            "error": "name must be unique"
+        })
+    }
+
     const person = {
         id: Math.floor(Math.random() * 103193139010311),
         name: body.name,
         number: body.number
     }
-    console.log(person)
 
     personsData = personsData.concat(person)
 
