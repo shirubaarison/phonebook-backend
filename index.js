@@ -84,32 +84,44 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    // const found = person.find({name: bd.name})
-    // console.log(found)
-    
-    // if (found) {
-    //     return response.status(409).json({
-    //         "error": "name must be unique"
-    //     })
-    // }
-
     const person = new Person ({
         name: bd.name,
         number: bd.number
     })
 
-    person.save().then(savedPerson => {
+    person.save()
+    .then(savedPerson => {
         response.json(savedPerson)
     })
+    .catch(err => next(err))
+    
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+    const bd = request.body
+
+    const person = {
+        name: bd.name,
+        number: bd.number
+    }
+
+    Person.findByIdAndUpdate(bd.id, person, { new: true })
+    .then(updatedPerson => {
+        response.json(updatedPerson)
+    })
+    .catch(err => next(err))
 })
 
 app.get('/info', (request, response) => {
-    const people = persons.length
     const date = new Date()
-    response.send(
-        `<p>phonebook has info for ${people} people</p>
-        <p>${date}</p>`
-    )
+    Person.countDocuments({})
+    .then(count => {
+        response.send(
+            `<p>phonebook has info for ${count} people</p>
+            <p>${date}</p>`
+        )
+    })
+    .catch(err => next(err))
 })
 
 const unknownEndpoint = (request, response) => {
@@ -120,7 +132,7 @@ app.use(unknownEndpoint)
 
 const errorHandlerer = (error, request, response, next) => {
     console.error(error.message)
-    
+
     if (error.name === 'CastError') {
         return response.status(400).send({ "error": "malformatted id" })
     }
